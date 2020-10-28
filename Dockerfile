@@ -9,4 +9,4 @@ RUN apt-get update && \
 
 EXPOSE 2181 2888 3888
 
-CMD ["/opt/kafka_2.13-2.5.1/bin/zookeeper-server-start.sh", "-daemon /opt/kafka_2.13-2.5.1/config/zookeeper.properties"]
+CMD ["top"]
