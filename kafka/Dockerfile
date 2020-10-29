@@ -7,6 +7,12 @@ RUN apt-get update && \
     tar xvfz kafka_2.13-2.5.1.tgz -C /opt && \
     rm kafka_2.13-2.5.1.tgz
 
-EXPOSE 2181 2888 3888
+COPY server.properties /opt/kafka_2.13-2.5.1/config/server.properties
 
-CMD ["/opt/kafka_2.13-2.5.1/bin/zookeeper-server-start.sh", "/opt/kafka_2.13-2.5.1/config/zookeeper.properties"]
+RUN sed "s/{BROKER_ID}/0/g" -i /opt/kafka_2.13-2.5.1/config/server.properties && \
+    sed "s/{LISTENER_ADDRESS}/$(hostname -i)/g" -i /opt/kafka_2.13-2.5.1/config/server.properties && \
+    sed "s/{ZOOKEEPER_ADDRESS}/10.96.64.18/g" -i /opt/kafka_2.13-2.5.1/config/server.properties
+
+EXPOSE 9092
+
+CMD ["/opt/kafka_2.13-2.5.1/bin/kafka-server-start.sh", "/opt/kafka_2.13-2.5.1/config/server.properties"]
