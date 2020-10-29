@@ -17,9 +17,9 @@ spec:
     protocol: TCP
     name: leader-election
   externalIPs:
-  - 3.86.71.239
-  - 3.226.97.57
-  - 3.235.197.175
+  - 54.173.28.73
+  - 54.209.249.14
+  - 54.80.185.122
   selector:
     app: zookeeper
 ---
@@ -47,3 +47,4 @@ spec:
           name: server
         - containerPort: 3888
           name: leader-election
+        imagePullPolicy: Always

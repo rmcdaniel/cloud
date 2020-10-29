@@ -7,13 +7,6 @@ RUN apt-get update && \
     tar xvfz kafka_2.13-2.5.1.tgz -C /opt && \
     rm kafka_2.13-2.5.1.tgz
 
-COPY server.properties /opt/kafka_2.13-2.5.1/config/server.properties
-
-RUN sed "s/{BROKER_ID}/0/g" -i /opt/kafka_2.13-2.5.1/config/server.properties && \
-    sed "s/{LISTENER_ADDRESS}/$(hostname -i)/g" -i /opt/kafka_2.13-2.5.1/config/server.properties && \
-    sed "s/{ZOOKEEPER_ADDRESS}/10.96.64.18/g" -i /opt/kafka_2.13-2.5.1/config/server.properties && \
-    sed "s/{ZOOKEEPER_PORT}/30659/g" -i /opt/kafka_2.13-2.5.1/config/server.properties
-
 EXPOSE 9092
 
-CMD ["tail", "-f", "/dev/null"]
+CMD ["/opt/kafka_2.13-2.5.1/bin/kafka-server-start.sh", "/opt/kafka_2.13-2.5.1/config/server.properties", "--override", "broker.id=0", "--override", "listeners=PLAINTEXT://0.0.0.0:9092", "--override", "advertised.listeners=PLAINTEXT://10.97.110.95:9092", "--override", "zookeeper.connect=10.96.192.144:2181"]
