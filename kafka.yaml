@@ -10,9 +10,6 @@ spec:
   - port: 9092
     protocol: TCP
     name: external
-  - port: 19092
-    protocol: TCP
-    name: internal
   externalIPs:
   - 54.173.28.73
   - 54.209.249.14
@@ -40,6 +37,4 @@ spec:
         ports:
         - containerPort: 9092
           name: external
-        - containerPort: 19092
-          name: internal
         imagePullPolicy: Always
