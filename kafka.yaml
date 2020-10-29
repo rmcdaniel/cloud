@@ -9,7 +9,7 @@ spec:
   ports:
   - port: 9092
     protocol: TCP
-    name: client
+    name: external
   externalIPs:
   - 54.173.28.73
   - 54.209.249.14
@@ -35,6 +35,8 @@ spec:
       - name: kafka
         image: rmcdaniel/cloud:kafka
         ports:
+        - containerPort: 9091
+          name: internal
         - containerPort: 9092
-          name: client
+          name: external
         imagePullPolicy: Always

@@ -5,7 +5,6 @@ metadata:
   labels:
     app: zookeeper
 spec:
-  type: NodePort
   ports:
   - port: 2181
     protocol: TCP
@@ -16,10 +15,6 @@ spec:
   - port: 3888
     protocol: TCP
     name: leader-election
-  externalIPs:
-  - 54.173.28.73
-  - 54.209.249.14
-  - 54.80.185.122
   selector:
     app: zookeeper
 ---
