@@ -35,8 +35,8 @@ spec:
       - name: kafka
         image: rmcdaniel/cloud:kafka
         ports:
-        - containerPort: 9091
-          name: internal
         - containerPort: 9092
           name: external
+        - containerPort: 19092
+          name: internal
         imagePullPolicy: Always
