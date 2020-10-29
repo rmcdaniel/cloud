@@ -11,8 +11,9 @@ COPY server.properties /opt/kafka_2.13-2.5.1/config/server.properties
 
 RUN sed "s/{BROKER_ID}/0/g" -i /opt/kafka_2.13-2.5.1/config/server.properties && \
     sed "s/{LISTENER_ADDRESS}/$(hostname -i)/g" -i /opt/kafka_2.13-2.5.1/config/server.properties && \
-    sed "s/{ZOOKEEPER_ADDRESS}/10.96.64.18/g" -i /opt/kafka_2.13-2.5.1/config/server.properties
+    sed "s/{ZOOKEEPER_ADDRESS}/10.96.64.18/g" -i /opt/kafka_2.13-2.5.1/config/server.properties && \
+    sed "s/{ZOOKEEPER_PORT}/30659/g" -i /opt/kafka_2.13-2.5.1/config/server.properties
 
 EXPOSE 9092
 
-CMD ["tail", "-f", "/dev/null"]
+CMD ["/opt/kafka_2.13-2.5.1/bin/kafka-server-start.sh", "/opt/kafka_2.13-2.5.1/config/server.properties"]
