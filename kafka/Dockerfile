@@ -9,4 +9,4 @@ RUN apt-get update && \
 
 EXPOSE 9092
 
-CMD ["/opt/kafka_2.13-2.5.1/bin/kafka-server-start.sh", "/opt/kafka_2.13-2.5.1/config/server.properties", "--override", "broker.id=0", "--override", "listeners=PLAINTEXT://0.0.0.0:9092", "--override", "advertised.listeners=PLAINTEXT://10.97.110.95:9092", "--override", "zookeeper.connect=10.96.192.144:2181"]
+CMD ["tail", "-f", "/dev/null"]
