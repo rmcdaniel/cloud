@@ -16,4 +16,4 @@ RUN sed "s/{BROKER_ID}/0/g" -i /opt/kafka_2.13-2.5.1/config/server.properties &&
 
 EXPOSE 9092
 
-CMD ["/opt/kafka_2.13-2.5.1/bin/kafka-server-start.sh", "/opt/kafka_2.13-2.5.1/config/server.properties"]
+CMD ["tail", "-f", "/dev/null"]
