@@ -10,6 +10,9 @@ spec:
   - port: 9092
     protocol: TCP
     name: external
+  - port: 19092
+    protocol: TCP
+    name: internal
   externalIPs:
   - 54.173.28.73
   - 54.209.249.14
