@@ -2,7 +2,7 @@ import argparse, json, os, sys
 from kafka import KafkaConsumer
 
 def consume(topics):
-	consumer = KafkaConsumer(bootstrap_servers = "3.238.122.116:30455")
+	consumer = KafkaConsumer(bootstrap_servers = "3.238.122.116:31823")
 	consumer.subscribe(topics=topics)
 	for msg in consumer:
 		producer_id = msg.topic[12:]

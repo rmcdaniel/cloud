@@ -3,7 +3,7 @@ from kafka import KafkaProducer
 from sys import platform
 
 def produce(topic):
-	producer = KafkaProducer(bootstrap_servers = "3.238.122.116:30455", acks = 1)
+	producer = KafkaProducer(bootstrap_servers = "3.238.122.116:31823", acks = 1)
 
 	for i in range(100):
 		if platform == "darwin":

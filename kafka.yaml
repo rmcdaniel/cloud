@@ -7,11 +7,53 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: client
+  - name: internal
     port: 9092
     targetPort: 9092
   selector:
     app: kafka
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-0
+spec:
+  ports:
+  - name: external
+    port: 9093
+    targetPort: 9092
+    protocol: TCP
+  selector:
+    statefulset.kubernetes.io/pod-name: kafka-0
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-1
+spec:
+  ports:
+  - name: external
+    port: 9093
+    targetPort: 9092
+    protocol: TCP
+  selector:
+    statefulset.kubernetes.io/pod-name: kafka-1
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-2
+spec:
+  ports:
+  - name: external
+    port: 9093
+    targetPort: 9092
+    protocol: TCP
+  selector:
+    statefulset.kubernetes.io/pod-name: kafka-2
+  type: NodePort
 ---
 kind: PersistentVolume
 apiVersion: v1
@@ -46,11 +88,11 @@ metadata:
     name: kafka
     namespace: default
 spec:
-    replicas: 1
+    replicas: 3
     selector:
         matchLabels:
             app: kafka
-    serviceName: kafka-svc
+    serviceName: kafka
     updateStrategy:
         type: RollingUpdate
     podManagementPolicy: Parallel
@@ -85,9 +127,25 @@ spec:
             - name: kafka
               image: rmcdaniel/cloud:kafka 
               imagePullPolicy: Always
+              env:
+                - name: KAFKA_0_SERVICE_HOST
+                  value: "3.238.122.116"
+                - name: KAFKA_0_SERVICE_PORT
+                  value: "31823"
+                - name: KAFKA_1_SERVICE_HOST
+                  value: "3.238.129.103"
+                - name: KAFKA_1_SERVICE_PORT
+                  value: "31885"
+                - name: KAFKA_2_SERVICE_HOST
+                  value: "3.236.146.19"
+                - name: KAFKA_2_SERVICE_PORT
+                  value: "31948"
               ports:
               - containerPort: 9092
-                name: client
+                name: internal
+                protocol: TCP
+              - containerPort: 9093
+                name: external
                 protocol: TCP
               volumeMounts:
               - name: datadir
@@ -110,4 +168,3 @@ spec:
         resources:
           requests:
             storage: 5Gi
-
