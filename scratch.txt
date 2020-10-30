@@ -1,0 +1,60 @@
+sudo hostnamectl set-hostname "master"
+sudo hostnamectl set-hostname "node1"
+sudo hostnamectl set-hostname "node2"
+
+---
+
+echo "DNSStubListener=no" | sudo tee -a /etc/systemd/resolved.conf
+sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
+sudo modprobe br_netfilter
+sudo sysctl -p
+cat << 'EOF' | sudo tee /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+sudo systemctl enable docker
+
+---
+
+sudo kubeadm init --pod-network-cidr=172.31.0.0/16
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
+---
+
+sudo kubeadm join 172.31.41.66:6443 --token vrm1rh.1atvcvjt8ue3lctj --discovery-token-ca-cert-hash sha256:79732ad6edf0a28f4aedb9c6d8d56c04f23d2744689d6920dc8bcfbe92dd19f7
+
+kubectl apply -f redis.yaml
+
+kubectl exec --stdin --tty redis -- /bin/bash
+
+cat << 'EOF' > /etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+
+./kafka-topics.sh --create --zookeeper 10.96.192.144:2181 --replication-factor 1 --partitions 1 --topic kafka
+
+./kafka-console-producer.sh --topic kafka --broker-list localhost:9092
+
+/opt/kafka_2.13-2.5.1/bin/kafka-console-consumer.sh --topic utilizations1 --from-beginning --bootstrap-server localhost:9092
+
