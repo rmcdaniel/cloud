@@ -70,6 +70,36 @@ spec:
   hostPath:
     path: "/var/lib/kafka"
 ---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: kafka-pv2
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Recycle
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/lib/kafka"
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: kafka-pv3
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Recycle
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/lib/kafka"
+---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -128,6 +158,8 @@ spec:
               image: rmcdaniel/cloud:kafka 
               imagePullPolicy: Always
               env:
+                - name: KAFKA_SERVICE_PORT_EXTERNAL
+                  value: "9093"
                 - name: KAFKA_0_SERVICE_HOST
                   value: "3.238.122.116"
                 - name: KAFKA_0_SERVICE_PORT
