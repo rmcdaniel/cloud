@@ -7,7 +7,7 @@ export BROKER_SERVICE_HOST_INTERNAL=${!BROKER_SERVICE_HOST_INTERNAL_ENV}
 export BROKER_SERVICE_PORT_INTERNAL=${!BROKER_SERVICE_PORT_INTERNAL_ENV}
 export BROKER_SERVICE_HOST_EXTERNAL=${!BROKER_SERVICE_HOST_EXTERNAL_ENV}
 export BROKER_SERVICE_PORT_EXTERNAL=${!BROKER_SERVICE_PORT_EXTERNAL_ENV}
-[[ -z "$BROKER_SERVICE_HOST" ]] && { echo "No external IP available" ; exit 1; }
+[[ -z "$BROKER_SERVICE_HOST_EXTERNAL" ]] && { echo "No external IP available" ; exit 1; }
 /opt/kafka_2.13-2.5.1/bin/kafka-server-start.sh /opt/kafka_2.13-2.5.1/config/server.properties \
 	--override log.dirs=/var/lib/kafka/data/topics \
 	--override controlled.shutdown.enable=true \
