@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: broker-pv0
+  name: broker-0
   labels:
     type: local
 spec:
@@ -16,7 +16,7 @@ spec:
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: broker-pv1
+  name: broker-1
   labels:
     type: local
 spec:
@@ -31,7 +31,7 @@ spec:
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: broker-pv2
+  name: broker-2
   labels:
     type: local
 spec:

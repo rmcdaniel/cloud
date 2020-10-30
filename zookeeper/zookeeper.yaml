@@ -19,7 +19,7 @@ spec:
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: zookeeper-pv
+  name: zookeeper
   labels:
     type: local
 spec:
