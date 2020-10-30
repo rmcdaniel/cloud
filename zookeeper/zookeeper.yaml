@@ -5,6 +5,7 @@ metadata:
   labels:
     app: zookeeper
 spec:
+  type: NodePort
   ports:
   - port: 2181
     name: client
@@ -12,7 +13,6 @@ spec:
     name: server
   - port: 3888
     name: leader-election
-  clusterIP: None
   selector:
     app: zookeeper
 ---
