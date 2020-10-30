@@ -51,6 +51,9 @@ spec:
         matchLabels:
             app: kafka
     serviceName: kafka-svc
+    updateStrategy:
+        type: RollingUpdate
+    podManagementPolicy: Parallel
     template:
         metadata:
           labels:
