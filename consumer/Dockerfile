@@ -1,6 +1,6 @@
 FROM python:3
 
-RUN pip install --no-cache-dir -r couchdb kafka-python
+RUN pip install --no-cache-dir couchdb kafka-python
 
 COPY consumer.py /
 
