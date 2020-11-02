@@ -1,14 +1,7 @@
-FROM ubuntu:18.04
+FROM python:3
 
-RUN apt-get update && \
-    apt-get install -y default-jre wget && \
-    apt-get clean && \
-    wget https://archive.apache.org/dist/kafka/2.5.1/kafka_2.13-2.5.1.tgz && \
-    tar xvfz kafka_2.13-2.5.1.tgz -C /opt && \
-    rm kafka_2.13-2.5.1.tgz
-    
-COPY ~/consumer.py /root/
+RUN pip install --no-cache-dir -r couchdb kafka-python
 
-EXPOSE 9092
+COPY consumer.py /
 
-CMD ["python3 /root/consumer.py -i 2 3 4"]
+CMD ["python", "/consumer.py", "-i", "1", "2", "3"]

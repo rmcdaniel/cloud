@@ -10,10 +10,6 @@ spec:
   - port: 5984
     protocol: TCP
     name: external
-  externalIPs:
-  - 3.238.122.116
-  - 3.238.129.103
-  - 3.236.146.19
   selector:
     app: couchdb
 ---
