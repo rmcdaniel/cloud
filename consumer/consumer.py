@@ -1,15 +1,32 @@
-import argparse, json, os, sys
+import argparse, couchdb, json, os, sys
 from kafka import KafkaConsumer
 
 def consume(topics):
+	couch = couchdb.Server('http://admin:password@3.238.122.116:32157/')
+
+	try:
+		couch.delete('sink')
+	except:
+		pass
+
+	db = couch.create('sink')
+
+	print(db.info()['doc_count'], "records currently in the database")
+
 	consumer = KafkaConsumer(bootstrap_servers = "3.238.122.116:31823")
 	consumer.subscribe(topics=topics)
 	for msg in consumer:
 		producer_id = msg.topic[12:]
 		payload = json.loads(str(msg.value, 'ascii'))
-		print("producer:", producer_id, "timestamp:", payload['timestamp'], "msg_len:", len(payload['contents']))
+		db.save({
+			'producer_id': producer_id,
+			'timestamp': payload['timestamp'],
+			'contents': payload['contents'],
+		})
+		print("producer:", producer_id, "timestamp:", payload['timestamp'], "msg_len:", len(payload['contents']), "database_rows:", db.info()['doc_count'])
 
 	consumer.close()
+	couch.delete('sink')
 
 def main(args):
 	topics = []
