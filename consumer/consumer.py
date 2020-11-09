@@ -2,7 +2,7 @@ import argparse, couchdb, json, os, sys
 from kafka import KafkaConsumer
 
 def consume(topics):
-	couch = couchdb.Server('http://admin:password@3.238.122.116:32157/')
+	couch = couchdb.Server('http://admin:password@18.205.66.224:31903/')
 
 	try:
 		couch.delete('sink')
@@ -13,7 +13,7 @@ def consume(topics):
 
 	print(db.info()['doc_count'], "records currently in the database")
 
-	consumer = KafkaConsumer(bootstrap_servers = "3.238.122.116:31823")
+	consumer = KafkaConsumer(bootstrap_servers = "18.205.66.224:32101")
 	consumer.subscribe(topics=topics)
 	for msg in consumer:
 		producer_id = msg.topic[12:]
