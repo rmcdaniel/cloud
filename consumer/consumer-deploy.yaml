@@ -16,3 +16,8 @@ spec:
       - name: consumer
         image: rmcdaniel/cloud:consumer
         imagePullPolicy: Always
+        env:
+        - name: COUCHDB_USER
+          value: "admin"
+        - name: COUCHDB_PASSWORD
+          value: "password"
