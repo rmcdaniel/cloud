@@ -98,7 +98,7 @@ spec:
             terminationGracePeriodSeconds: 300
             containers:
             - name: kafka
-              image: rmcdaniel/cloud:kafka 
+              image: rlmcdaniel/cloud:kafka 
               imagePullPolicy: Always
               env:
                 - name: KAFKA_SERVICE_PORT_EXTERNAL

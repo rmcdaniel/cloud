@@ -63,7 +63,7 @@ spec:
                         topologyKey: "kubernetes.io/hostname"
             containers:
             - name: zookeeper
-              image: rmcdaniel/cloud:zookeeper 
+              image: rlmcdaniel/cloud:zookeeper 
               imagePullPolicy: Always
               ports:
               - containerPort: 2181
