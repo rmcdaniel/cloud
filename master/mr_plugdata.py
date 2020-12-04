@@ -61,7 +61,7 @@ def parseCmdLineArgs ():
 def main ():
     """ Main program """
 
-    print("MapReduce Wordcount Main program")
+    print("MapReduce PlugData Main program")
     parsed_args = parseCmdLineArgs ()
     
     # now invoke the mapreduce framework. Notice we have slightly changed the way the

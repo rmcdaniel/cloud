@@ -64,6 +64,7 @@ def barrier_sink (args):
         
         print("Barrier sink thread starting with args: ", args)
         receiver = args['receiver']
+        print("after receive")
 
         # The logic here is that we wait until the required number of
         # ACKs are received 
@@ -91,6 +92,7 @@ def barrier_sink (args):
                 # Note that our map worker sends us json-ified response. So
                 # receive a json response.
                 map_resp = receiver.recv_json ()
+                print("map_resp done")
 
                 # save this into a csv file. Number it based on the iteration
                 # we are in.
@@ -332,16 +334,29 @@ class MR_Framework ():
 
             # compute the size of the datafile and create (almost) equal sized
             # chunks
-            doc_size = os.path.getsize (self.datafile)
-            chunk_size = int (round (doc_size/self.M))  # integer division
-            print("doc size = ", doc_size, ", chunk size = ", chunk_size)
+            my_file = open(self.datafile, 'r')
+            Counter = 0
+            M_Content = my_file.read()
+            CountList = M_Content.split("\n")
+            
+            for i in CountList:
+              if i:
+                Counter += 1
+            
+            my_file.close()
+            del M_Content
+            chunk_size = int(Counter/self.M)
 
-            # the starting location of the next chunk to read,
-            # initialized to 0 (start)
-            locn2read = 0  
+            print("lines = ", Counter, ", chunk size = ", chunk_size)
 
             # handle to the input file
             datafile = open (self.datafile,'r')
+            
+            lines = datafile.readlines()
+            datafile.close ()
+            
+            location = 0
+            content = ""
         
             # Note that we are splitting the file along bytes so it is
             # very much possible that a valid word may get split into
@@ -349,31 +364,25 @@ class MR_Framework ():
             # these two split parts of a word as separate unique words
             print(("MR::solve - master sending args to {} map workers:".format(self.M)))
             for i in range (self.M):
-                # get the starting locn and size of the next chunk
-                if (i == self.M-1): # if this is the last chunk
-                    chunk_size = doc_size - locn2read
-
-                # seek the location in the file to read from
-                datafile.seek (locn2read, 0)
-
-                # read the chunk size
-                content = datafile.read (chunk_size)
+                for x in range(chunk_size):
+                  content += (lines[location])
+                  location += 1
                 
                 # create the argument to send to the task
+                content = content[:-1]
                 map_arg = {'id': i,
-                           'size': chunk_size,
+                           #'size': chunk_size,
                            'content' : content}
+                           
+                print(content)
 
                 # now send this and one of the map tasks will receive it
                 # according to the PUSH-PULL pattern we are using
                 self.sender4map.send_json (map_arg)
+                content = ''
 
-                # move the starting position that many bytes ahead
-                locn2read += chunk_size
-
+            del lines
             print(("MR::solve - master done sending args to {} map workers:".format(self.M)))
-            # close the file after the loop
-            datafile.close ()
             
         except:
             print("Unexpected error in distribute_map_tasks:", sys.exc_info()[0])
