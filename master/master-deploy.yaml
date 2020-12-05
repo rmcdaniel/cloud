@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: master
+  labels:
+    app: master
+spec:
+  type: NodePort
+  ports:
+  - port: 5556
+    protocol: TCP
+    name: external
+  selector:
+    app: master
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: master
+spec:
+  selector:
+    matchLabels:
+      app: master
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: master
+    spec:
+      containers:
+      - name: master
+        image: rlmcdaniel/cloud:master
+        ports:
+        - containerPort: 5556
+          name: external
+        imagePullPolicy: Always

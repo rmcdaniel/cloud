@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    labels:
+        app: map
+    name: map
+    namespace: default
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: map
+    serviceName: map
+    updateStrategy:
+        type: RollingUpdate
+    podManagementPolicy: Parallel
+    template:
+        metadata:
+          labels:
+            app: map
+        spec:
+            containers:
+            - name: map
+              image: rlmcdaniel/cloud:map 
+              imagePullPolicy: Always

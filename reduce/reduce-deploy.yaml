@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    labels:
+        app: reduce
+    name: reduce
+    namespace: default
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: reduce
+    serviceName: reduce
+    updateStrategy:
+        type: RollingUpdate
+    podManagementPolicy: Parallel
+    template:
+        metadata:
+          labels:
+            app: reduce
+        spec:
+            containers:
+            - name: reduce
+              image: rlmcdaniel/cloud:reduce 
+              imagePullPolicy: Always
