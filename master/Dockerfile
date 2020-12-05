@@ -9,6 +9,6 @@ COPY mr_framework.py /
 COPY mr_thread.py /
 COPY start-master.sh /
 
-RUN chmod a+x /start-kafka.sh
+RUN chmod a+x /start-master.sh
 
 CMD ["/start-master.sh"]
