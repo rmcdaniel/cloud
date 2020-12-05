@@ -6,4 +6,6 @@ RUN python -m pip install --upgrade pip
 COPY mr_mapworker.py /
 COPY start-map.sh /
 
+RUN chmod a+x /start-map.sh
+
 CMD ["/start-map.sh"]

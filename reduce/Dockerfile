@@ -7,4 +7,6 @@ RUN python -m pip install --upgrade pip
 COPY mr_reduceworker.py /
 COPY start-reduce.sh /
 
+RUN chmod a+x /start-reduce.sh
+
 CMD ["/start-reduce.sh"]
