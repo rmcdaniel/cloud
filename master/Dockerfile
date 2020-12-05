@@ -8,5 +8,6 @@ COPY mr_plugdata.py /
 COPY mr_framework.py /
 COPY mr_thread.py /
 COPY small.txt /
+COPY start-master.sh /
 
-CMD ["python", "mr_plugdata.py", "-p", "5556", "-M", "1", "-R", "1", "small.txt"]
+CMD ["/start-master.sh"]
