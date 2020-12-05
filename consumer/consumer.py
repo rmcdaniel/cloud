@@ -1,43 +1,39 @@
 import argparse, couchdb, json, os, sys
 from kafka import KafkaConsumer
 
-def consume(topics):
+def consume():
 	couch = couchdb.Server('http://' + os.getenv('COUCHDB_USER', '') + ':' + os.getenv('COUCHDB_PASSWORD', '') + '@' + os.getenv('COUCHDB_SERVICE_HOST', '') + ':' + os.getenv('COUCHDB_SERVICE_PORT', '') + '/')
 
 	try:
-		couch.delete('sink')
+		couch.delete('plugs')
 	except:
 		pass
 
-	db = couch.create('sink')
-
-	print(db.info()['doc_count'], "records currently in the database")
+	db = couch.create('plugs')
 
 	consumer = KafkaConsumer(bootstrap_servers = os.getenv('BROKER_0_SERVICE_HOST', '') + ':' + os.getenv('BROKER_0_SERVICE_PORT_INTERNAL', ''))
-	consumer.subscribe(topics=topics)
+	consumer.subscribe(topics=["plugs"])
 	for msg in consumer:
 		producer_id = msg.topic[12:]
 		payload = json.loads(str(msg.value, 'ascii'))
 		db.save({
-			'producer_id': producer_id,
+			'id': payload['id'],
 			'timestamp': payload['timestamp'],
-			'contents': payload['contents'],
+			'value': payload['value'],
+			'property': payload['property'],
+			'plug_id': payload['plug_id'],
+			'household_id': payload['household_id'],
 		})
-		print("producer:", producer_id, "timestamp:", payload['timestamp'], "msg_len:", len(payload['contents']), "database_rows:", db.info()['doc_count'])
 
 	consumer.close()
-	couch.delete('sink')
+	couch.delete('plugs')
 
 def main(args):
-	topics = []
-	for id in args.ids:
-		topics.append("utilizations" + str(id))
-	consume(topics)
+	consume()
 
 if __name__ == "__main__":
 	try:
 		parser = argparse.ArgumentParser()
-		parser.add_argument('-i', '--ids', required=True, nargs='+', help='ids of producers to listen for')
 		main(parser.parse_args())
 	except KeyboardInterrupt:
 		try:

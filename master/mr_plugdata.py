@@ -21,6 +21,8 @@ import sys
 import time
 import argparse   # argument parser
 import re          # regular expression
+import csv
+import couchdb
 
 from mr_framework import MR_Framework # our wordcount MR framework
 
@@ -63,7 +65,15 @@ def main ():
 
     print("MapReduce PlugData Main program")
     parsed_args = parseCmdLineArgs ()
-    
+
+	couch = couchdb.Server('http://' + os.getenv('COUCHDB_USER', '') + ':' + os.getenv('COUCHDB_PASSWORD', '') + '@' + os.getenv('COUCHDB_SERVICE_HOST', '') + ':' + os.getenv('COUCHDB_SERVICE_PORT', '') + '/')
+    db = couch['plugs']
+    with open(parsed_args.datafile, 'w', newline='') as write_obj:
+        csv_writer = csv.writer(write_obj, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for row in db:
+            csv_writer.writerow(row)
+        write_obj.close()
+
     # now invoke the mapreduce framework. Notice we have slightly changed the way the
     # constructor works and the arguments it takes. 
     mrf = MR_Framework (parsed_args)

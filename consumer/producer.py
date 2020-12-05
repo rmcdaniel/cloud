@@ -1,42 +1,38 @@
 import argparse, json, os, sys, time
 from kafka import KafkaProducer
 from sys import platform
+from csv import reader
 
-def produce(topic):
-	producer = KafkaProducer(bootstrap_servers = "3.238.122.116:31823", acks = 1)
+def produce(ip, port, data):
+	producer = KafkaProducer(bootstrap_servers = ip + ":" + port, acks = 1)
 
-	for i in range(100):
-		if platform == "darwin":
-			process = os.popen("top -n 1 -l 1")
-		else:
-			process = os.popen("top -n 1 -b")
-
-		timestamp = time.strftime("%Y-%m-%d %H:%M:%S+00:00 (UTC)", time.gmtime())
-
-		contents = process.read()
-
-		payload = json.dumps({
-			'timestamp': timestamp,
-			'contents': contents
+	with open(data, 'r') as read_obj:
+		csv_reader = reader(read_obj)
+		for row in csv_reader:
+			payload = json.dumps({
+				'id': row[0],
+				'timestamp': row[1],
+				'value': row[2],
+				'property': row[3],
+				'plug_id': row[4],
+				'household_id': row[5],
 			})
 
-		print("producer:", topic[12:], "timestamp:", timestamp, "msg_len:", len(contents))
+			producer.send("plugs", value = bytes(payload, 'ascii'))
 
-		producer.send(topic, value = bytes(payload, 'ascii'))
-
-		producer.flush()
-
-		time.sleep(1)
+			producer.flush()
 
 	producer.close()
 
 def main(args):
-	produce("utilizations" + str(args.id))
+	produce(str(args.ip), str(args.port), str(args.data))
 
 if __name__ == "__main__":
 	try:
 			parser = argparse.ArgumentParser()
-			parser.add_argument('-i', '--id', required=True, help='id of producer')
+			parser.add_argument('-i', '--ip', required=True, help='kafka ip')
+			parser.add_argument('-p', '--port', required=True, help='kafka port')
+			parser.add_argument('-d', '--data', required=True, help='csv data file')
 			main(parser.parse_args())
 	except KeyboardInterrupt:
 		try:
