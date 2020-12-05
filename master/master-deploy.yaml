@@ -7,7 +7,6 @@ metadata:
 spec:
   ports:
   - port: 5556
-    protocol: TCP
     name: external
   selector:
     app: master
