@@ -149,6 +149,8 @@ class MR_Map ():
         # word, emit it as an intermediate key with its count
         for token in split_arg:
             my_list = token.split(",")
+            if len(my_list) < 7:
+                continue
             my_key = my_list[6] + "-" + my_list[5] + "-" + my_list[4] + "-" + my_list[3]
             intmed_key_val_list.append ({'token': my_key, 'val': float(my_list[2])})
 

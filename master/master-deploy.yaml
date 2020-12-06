@@ -37,6 +37,10 @@ spec:
       - name: master
         image: rlmcdaniel/cloud:master
         env:
+        - name: MAP_WORKER_COUNT
+          value: 1
+        - name: REDUCE_WORKER_COUNT
+          value: 1
         - name: COUCHDB_USER
           value: "admin"
         - name: COUCHDB_PASSWORD
