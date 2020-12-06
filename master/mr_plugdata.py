@@ -66,13 +66,23 @@ def main ():
     print("MapReduce PlugData Main program")
     parsed_args = parseCmdLineArgs ()
 
-	couch = couchdb.Server('http://' + os.getenv('COUCHDB_USER', '') + ':' + os.getenv('COUCHDB_PASSWORD', '') + '@' + os.getenv('COUCHDB_SERVICE_HOST', '') + ':' + os.getenv('COUCHDB_SERVICE_PORT', '') + '/')
+    print("Creating CSV file...")
+    couch = couchdb.Server('http://' + os.getenv('COUCHDB_USER', '') + ':' + os.getenv('COUCHDB_PASSWORD', '') + '@' + os.getenv('COUCHDB_SERVICE_HOST', '') + ':' + os.getenv('COUCHDB_SERVICE_PORT', '') + '/')
     db = couch['plugs']
-    with open(parsed_args.datafile, 'w', newline='') as write_obj:
-        csv_writer = csv.writer(write_obj, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    with open(parsed_args.datafile, 'w') as write_obj:
+        csv_writer = csv.writer(write_obj)
         for row in db:
-            csv_writer.writerow(row)
+            csv_writer.writerow([
+                db[row]['id'],
+                db[row]['timestamp'],
+                db[row]['value'],
+                db[row]['property'],
+                db[row]['plug_id'],
+                db[row]['household_id'],
+                db[row]['house_id'],
+            ])
         write_obj.close()
+    print("Done!")
 
     # now invoke the mapreduce framework. Notice we have slightly changed the way the
     # constructor works and the arguments it takes. 

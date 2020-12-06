@@ -7,7 +7,15 @@ metadata:
 spec:
   ports:
   - port: 5556
-    name: external
+    name: map_master
+  - port: 5557
+    name: reduce_master
+  - port: 5558
+    name: up_master
+  - port: 5559
+    name: map_results
+  - port: 5560
+    name: reduce_results
   selector:
     app: master
 ---
@@ -28,7 +36,20 @@ spec:
       containers:
       - name: master
         image: rlmcdaniel/cloud:master
+        env:
+        - name: COUCHDB_USER
+          value: "admin"
+        - name: COUCHDB_PASSWORD
+          value: "password"
         ports:
         - containerPort: 5556
-          name: external
+          name: map_master
+        - containerPort: 5557
+          name: reduce_master
+        - containerPort: 5558
+          name: up_master
+        - containerPort: 5559
+          name: map_results
+        - containerPort: 5560
+          name: reduce_results
         imagePullPolicy: Always

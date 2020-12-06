@@ -4,6 +4,8 @@ RUN apt-get -y update && apt-get install -y net-tools iputils-ping python python
 
 RUN python -m pip install --upgrade pip
 
+RUN pip install --no-cache-dir couchdb
+
 COPY mr_plugdata.py /
 COPY mr_framework.py /
 COPY mr_thread.py /
