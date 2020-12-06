@@ -71,15 +71,16 @@ def main ():
     db = couch['plugs']
     with open(parsed_args.datafile, 'w') as write_obj:
         csv_writer = csv.writer(write_obj)
-        for row in db:
+        for item in db.view('_all_docs', include_docs=True):
+            row = item.doc
             csv_writer.writerow([
-                db[row]['id'],
-                db[row]['timestamp'],
-                db[row]['value'],
-                db[row]['property'],
-                db[row]['plug_id'],
-                db[row]['household_id'],
-                db[row]['house_id'],
+                row['id'],
+                row['timestamp'],
+                row['value'],
+                row['property'],
+                row['plug_id'],
+                row['household_id'],
+                row['house_id'],
             ])
         write_obj.close()
     print("Done!")
