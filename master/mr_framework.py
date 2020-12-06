@@ -64,7 +64,6 @@ def barrier_sink (args):
         
         print("Barrier sink thread starting with args: ", args)
         receiver = args['receiver']
-        print("after receive")
 
         # The logic here is that we wait until the required number of
         # ACKs are received 
@@ -92,7 +91,6 @@ def barrier_sink (args):
                 # Note that our map worker sends us json-ified response. So
                 # receive a json response.
                 map_resp = receiver.recv_json ()
-                print("map_resp done")
 
                 # save this into a csv file. Number it based on the iteration
                 # we are in.
@@ -347,8 +345,6 @@ class MR_Framework ():
             del M_Content
             chunk_size = int(Counter/self.M)
 
-            print("lines = ", Counter, ", chunk size = ", chunk_size)
-
             # handle to the input file
             datafile = open (self.datafile,'r')
             
@@ -374,8 +370,6 @@ class MR_Framework ():
                            #'size': chunk_size,
                            'content' : content}
                            
-                print(content)
-
                 # now send this and one of the map tasks will receive it
                 # according to the PUSH-PULL pattern we are using
                 self.sender4map.send_json (map_arg)
