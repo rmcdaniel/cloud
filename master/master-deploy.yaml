@@ -7,15 +7,15 @@ metadata:
 spec:
   ports:
   - port: 5556
-    name: map_master
+    name: map-master
   - port: 5557
-    name: reduce_master
+    name: reduce-master
   - port: 5558
-    name: up_master
+    name: up-master
   - port: 5559
-    name: map_results
+    name: map-results
   - port: 5560
-    name: reduce_results
+    name: reduce-results
   selector:
     app: master
 ---
@@ -43,13 +43,13 @@ spec:
           value: "password"
         ports:
         - containerPort: 5556
-          name: map_master
+          name: map-master
         - containerPort: 5557
-          name: reduce_master
+          name: reduce-master
         - containerPort: 5558
-          name: up_master
+          name: up-master
         - containerPort: 5559
-          name: map_results
+          name: map-results
         - containerPort: 5560
-          name: reduce_results
+          name: reduce-results
         imagePullPolicy: Always
