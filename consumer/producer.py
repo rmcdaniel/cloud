@@ -16,6 +16,7 @@ def produce(ip, port, data):
 				'property': row[3],
 				'plug_id': row[4],
 				'household_id': row[5],
+				'house_id': row[6],
 			})
 
 			producer.send("plugs", value = bytes(payload, 'ascii'))

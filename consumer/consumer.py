@@ -23,6 +23,7 @@ def consume():
 			'property': payload['property'],
 			'plug_id': payload['plug_id'],
 			'household_id': payload['household_id'],
+			'house_id': payload['house_id'],
 		})
 
 	consumer.close()
