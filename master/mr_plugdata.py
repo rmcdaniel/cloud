@@ -66,10 +66,11 @@ def main ():
     print("MapReduce PlugData Main program")
     parsed_args = parseCmdLineArgs ()
 
-    print("Creating CSV file...")
+    print("Creating CSV file...", end='')
     couch = couchdb.Server('http://' + os.getenv('COUCHDB_USER', '') + ':' + os.getenv('COUCHDB_PASSWORD', '') + '@' + os.getenv('COUCHDB_SERVICE_HOST', '') + ':' + os.getenv('COUCHDB_SERVICE_PORT', '') + '/')
     db = couch['plugs']
     with open(parsed_args.datafile, 'w') as write_obj:
+        count = 0
         csv_writer = csv.writer(write_obj)
         for item in db.view('_all_docs', include_docs=True):
             row = item.doc
@@ -82,6 +83,9 @@ def main ():
                 row['household_id'],
                 row['house_id'],
             ])
+            count += 1
+            if count % 1000 == 0:
+                print(".", end="")
         write_obj.close()
     print("Done!")
 
