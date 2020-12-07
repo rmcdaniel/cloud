@@ -56,4 +56,9 @@ spec:
           name: map-results
         - containerPort: 5560
           name: reduce-results
+        readinessProbe:
+          tcpSocket:
+            port: 5556
+          initialDelaySeconds: 5
+          periodSeconds: 10
         imagePullPolicy: Always
