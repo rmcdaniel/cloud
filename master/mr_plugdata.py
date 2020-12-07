@@ -69,23 +69,28 @@ def main ():
     print("Creating CSV file...")
     couch = couchdb.Server('http://' + os.getenv('COUCHDB_USER', '') + ':' + os.getenv('COUCHDB_PASSWORD', '') + '@' + os.getenv('COUCHDB_SERVICE_HOST', '') + ':' + os.getenv('COUCHDB_SERVICE_PORT', '') + '/')
     db = couch['plugs']
+    key = ""
+    skip = 0
+    count = db.info()['doc_count']
+    current = 0
     with open(parsed_args.datafile, 'w') as write_obj:
-        count = 0
         csv_writer = csv.writer(write_obj)
-        for item in db.view('_all_docs', include_docs=True):
-            row = item.doc
-            csv_writer.writerow([
-                row['id'],
-                row['timestamp'],
-                row['value'],
-                row['property'],
-                row['plug_id'],
-                row['household_id'],
-                row['house_id'],
-            ])
-            count += 1
-            if count % 1000 == 0:
-                print(".")
+        while current < count:
+            print('{:.0%}'.format(current / float(count)))
+            for item in db.view('_all_docs', startkey=key, skip=skip, limit=10000, include_docs=True):
+                row = item.doc
+                csv_writer.writerow([
+                    row['id'],
+                    row['timestamp'],
+                    row['value'],
+                    row['property'],
+                    row['plug_id'],
+                    row['household_id'],
+                    row['house_id'],
+                ])
+                key = item.id
+            skip = 1
+            current += 10000
         write_obj.close()
     print("Done!")
 
