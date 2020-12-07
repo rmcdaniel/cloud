@@ -66,7 +66,7 @@ def main ():
     print("MapReduce PlugData Main program")
     parsed_args = parseCmdLineArgs ()
 
-    print("Creating CSV file...", end='')
+    print("Creating CSV file...")
     couch = couchdb.Server('http://' + os.getenv('COUCHDB_USER', '') + ':' + os.getenv('COUCHDB_PASSWORD', '') + '@' + os.getenv('COUCHDB_SERVICE_HOST', '') + ':' + os.getenv('COUCHDB_SERVICE_PORT', '') + '/')
     db = couch['plugs']
     with open(parsed_args.datafile, 'w') as write_obj:
@@ -85,7 +85,7 @@ def main ():
             ])
             count += 1
             if count % 1000 == 0:
-                print(".", end="")
+                print(".")
         write_obj.close()
     print("Done!")
 
